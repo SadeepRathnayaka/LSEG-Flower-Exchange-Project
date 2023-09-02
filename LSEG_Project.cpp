@@ -36,8 +36,8 @@ string getTime()
 
 {
 
-    //This function output the current time and data 
-    
+    //This function output the current time and date
+
     auto currentTime = chrono::system_clock::now();
 
     time_t currentTimeT = chrono::system_clock::to_time_t(currentTime);
