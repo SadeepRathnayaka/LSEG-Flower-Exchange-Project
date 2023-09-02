@@ -41,7 +41,7 @@ string getTime()
     // Convert current time to a time_t for formatting
     time_t currentTimeT = chrono::system_clock::to_time_t(currentTime);
 
-    // Format the time as "YYYYMMDD-HHMMSS.sss"
+    // Format the time as "YYYY.MM.DD - HH.MM.SS.sss"
     tm *timeInfo = localtime(&currentTimeT);
     char formattedTime[24];
     strftime(formattedTime, sizeof(formattedTime), "%Y.%m.%d - %H.%M.%S", timeInfo);
@@ -57,12 +57,18 @@ string getTime()
 }
 
 bool buyAscending(const Order_Book &order1 , const Order_Book &order2) {
+
+    /*This function compares two buy orders' prices
+    and will be used in sort() function*/
+
     if (order1.price > order2.price) {return true ;}
-    else {return false ;}
-    
+    else {return false ;}   
 }
 
 bool sellDescending(const Order_Book &order1 , const Order_Book &order2) {
+
+    /*This function compares two sell orders' prices
+    and will be used in sort() function*/
     if (order1.price < order2.price) {return true ;}
     else {return false ;}
 }
@@ -79,7 +85,9 @@ void processing(vector<Order_Book> &sell,
                 ofstream &output,
                 int ID
                 ) {
-
+        
+        //This function process an order an output it's process to the CSV file
+ 
     if (side == 1)   // Buy order
     {
 
@@ -97,7 +105,7 @@ void processing(vector<Order_Book> &sell,
 
             while ((!sell.empty()) && (sell[0].price <= price)) {
 
-                if (sell[0].quantity == quantity) {
+                if (sell[0].quantity == quantity) {  // two orders' quantity equal
 
                     order.status = "Fill" ;
                     sell[0].status = "Fill" ;
@@ -111,7 +119,7 @@ void processing(vector<Order_Book> &sell,
 
                 }
 
-                else if (sell[0].quantity > quantity) {
+                else if (sell[0].quantity > quantity) {   // Lowest sell order quantity higher than buy order quantity
 
                     order.status = "Fill" ;
                     sell[0].status = "Pfill" ;
@@ -123,7 +131,7 @@ void processing(vector<Order_Book> &sell,
                     break ;
                 }
 
-                else {
+                else {   // Lowest sell order quantity less than buy order quantity
 
                 order.status = "Pfill" ;
                 sell[0].status = "Fill" ;
@@ -136,7 +144,11 @@ void processing(vector<Order_Book> &sell,
                 }
             }
 
-            if (!isBreak) {
+            if (!isBreak) {      
+                
+                 /* This block will run if the sell order book get empty 
+                    or if find no matching order while processing the order*/
+
                 order.status = "New";
                 buy.push_back(order);
                 sort(buy.begin(), buy.end(), buyAscending) ;
@@ -147,7 +159,7 @@ void processing(vector<Order_Book> &sell,
 
     else {   // Sell order
 
-        if ((buy.empty()) || buy[0].price < price) // Sell book empty or Price is not matching
+        if ((buy.empty()) || buy[0].price < price) // Buy book empty or Price is not matching
         {
             order.status = "New";
             output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " <<  "      - ," << getTime() << endl;
@@ -161,7 +173,7 @@ void processing(vector<Order_Book> &sell,
 
             while ((!buy.empty()) && (buy[0].price >= price)) {
 
-                if (buy[0].quantity == order.quantity) {
+                if (buy[0].quantity == order.quantity) {   // Two orders' quantity equal
 
                     order.status = "Fill" ;
                     buy[0].status = "Fill" ;
@@ -175,7 +187,7 @@ void processing(vector<Order_Book> &sell,
 
                 }
 
-                else if (buy[0].quantity > order.quantity) {
+                else if (buy[0].quantity > order.quantity) {  // Highest buy order quantity higher than sell order quantity
 
                     order.status = "Fill" ;
                     buy[0].status = "Pfill" ;
@@ -187,7 +199,7 @@ void processing(vector<Order_Book> &sell,
                     break ;
                 }
 
-                else {
+                else {     // Highest buy order quantity less than sell order quantity
 
                 order.status = "Pfill" ;
                 buy[0].status = "Fill" ;
@@ -201,6 +213,10 @@ void processing(vector<Order_Book> &sell,
             }
 
             if (!isBreak) {
+
+                /* This block will run if the buy order book get empty 
+                    or if find no matching order while processing*/
+
                 order.status = "New";
                 sell.push_back(order);
                 sort(sell.begin(), sell.end(), sellDescending) ;
@@ -228,7 +244,7 @@ int main() {
     vector<Order_Book> OrchidSell ;
     vector<Order_Book> OrchidBuy ;
 
-    ifstream inputFile;
+    ifstream inputFile;      // Open the order.csv file as inputFile
     inputFile.open("order.csv"); 
 
     if (!inputFile.is_open())
@@ -237,7 +253,10 @@ int main() {
         return 1;
     }
 
-    ofstream output;
+    string header;
+    getline(inputFile, header);
+
+    ofstream output;      // Create the output csv file
     output.open("execution_rep.csv");
 
     if (!output.is_open())
@@ -246,17 +265,15 @@ int main() {
         return 1;
     }
 
+    // Output file shape
     output << "Order ID, Cl. Ord. ID, Instrument, Side, Exec Status, Quantity, Price, Reason, Transaction Time" << endl;
 
-    string header;
-    getline(inputFile, header);
-
-
-    int ID = 1 ;
+    // Order number
+    int ID = 1 ; 
 
     string line;
     while (getline(inputFile, line)) {
-        vector<string> row; // Create a new vector for each iteration
+        vector<string> row;   // Adding values of a row into a vector
         istringstream ss(line);
         string cell;
 
@@ -279,7 +296,7 @@ int main() {
             continue ;
         }
 
-        try {
+        try {   
             if (!( side == 1 || side == 2)) {
                 throw runtime_error("Invalid 'side' value");
             }

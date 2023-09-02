@@ -1,7 +1,9 @@
 Order ID, Cl. Ord. ID, Instrument, Side, Exec Status, Quantity, Price, Reason, Transaction Time
-Ord1,aa13,,1,Reject,100,55, Invalid Instrument,2023.09.02 - 09.03.56.641
-Ord2,aa14,Rose,3,Reject,100,65, Invalid Side,2023.09.02 - 09.03.56.654
-Ord3,aa15,Lavender,2,Reject,101,1, Invalid Size,2023.09.02 - 09.03.56.654
-Ord4,aa16,Tulip,1,Reject,100,-2, Invalid Price,2023.09.02 - 09.03.56.654
-Ord5,aa17,tulip,1,Reject,100,2, Invalid Instrument,2023.09.02 - 09.03.56.654
-Ord6,aa18,Tulip,2.5,Reject,101,-2, Invalid Size,2023.09.02 - 09.03.56.654
+Ord1,aa13,Rose,1,New,100,55,       - ,2023.09.02 - 09.30.56.495
+Ord2,aa14,Rose,1,New,100,65,       - ,2023.09.02 - 09.30.56.505
+Ord3,aa15,Rose,2,Pfill,100,65,       - ,2023.09.02 - 09.30.56.505
+Ord2,aa14,Rose,1,Fill,100,65,       - ,2023.09.02 - 09.30.56.505
+Ord3,aa15,Rose,2,Pfill,100,55,       - ,2023.09.02 - 09.30.56.505
+Ord1,aa13,Rose,1,Fill,100,55,       - ,2023.09.02 - 09.30.56.505
+Ord4,aa16,Rose,1,Fill,100,1,       - ,2023.09.02 - 09.30.56.505
+Ord3,aa15,Rose,2,Fill,100,1,       - ,2023.09.02 - 09.30.56.505
