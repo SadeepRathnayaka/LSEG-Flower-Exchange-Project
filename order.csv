@@ -1,4 +1,5 @@
 Cl. Ord. ID,Instrument,Side,Quantity,Price
-aa13,Rose,2,100,55.05
-aa14,Rose,2,100,45.1
-aa15,Rose,1,100,35.2
+aa13,Rose,1,100,55
+aa14,Rose,1,100,65
+aa15,Rose,2,300,1
+aa16,Rose,1,10,2

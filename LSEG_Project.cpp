@@ -32,7 +32,7 @@ public :
 
 };
 
-string getFormattedTime()
+string getTime()
 
 {
     // Get the current time
@@ -43,8 +43,8 @@ string getFormattedTime()
 
     // Format the time as "YYYYMMDD-HHMMSS.sss"
     tm *timeInfo = localtime(&currentTimeT);
-    char formattedTime[20];
-    strftime(formattedTime, sizeof(formattedTime), "%Y%m%d-%H%M%S", timeInfo);
+    char formattedTime[24];
+    strftime(formattedTime, sizeof(formattedTime), "%Y.%m.%d - %H.%M.%S", timeInfo);
 
     // Get milliseconds
     auto milliseconds = chrono::duration_cast<chrono::milliseconds>(currentTime.time_since_epoch()) % 1000;
@@ -86,7 +86,7 @@ void processing(vector<Order_Book> &sell,
         if ((sell.empty()) || sell[0].price > price) // Sell book empty or Price is not matching
         {
             order.status = "New";
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " << "  - ," << getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " << "      - ," << getTime() << endl;
             buy.push_back(order);
             sort(buy.begin(), buy.end(), buyAscending) ;
         }
@@ -102,8 +102,8 @@ void processing(vector<Order_Book> &sell,
                     order.status = "Fill" ;
                     sell[0].status = "Fill" ;
 
-                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << sell[0].price << ", " << "  - ," << getFormattedTime() << endl;
-                    output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
+                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << sell[0].price << ", " << "      - ," << getTime() << endl;
+                    output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "      - ," << getTime() << endl;
 
                     sell.erase(sell.begin()) ;
                     isBreak = 1 ;
@@ -117,8 +117,8 @@ void processing(vector<Order_Book> &sell,
                     sell[0].status = "Pfill" ;
                     sell[0].quantity = sell[0].quantity - quantity ;
 
-                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << sell[0].price << ", " << "  - ," <<  getFormattedTime() << endl;
-                    output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "  - , " << getFormattedTime() << endl;
+                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << sell[0].price << ", " << "      - ," <<  getTime() << endl;
+                    output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "      - ," << getTime() << endl;
                     isBreak = 1 ;
                     break ;
                 }
@@ -129,8 +129,8 @@ void processing(vector<Order_Book> &sell,
                 sell[0].status = "Fill" ;
                 quantity = quantity - sell[0].quantity ;
 
-                output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << sell[0].quantity << "," << sell[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
-                output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
+                output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << sell[0].quantity << "," << sell[0].price << ", " <<  "      - ," << getTime() << endl;
+                output << "Ord" << sell[0].order_id <<","<< sell[0].client_id << "," << instrument << "," << sell[0].side << "," << sell[0].status << "," << quantity << "," << sell[0].price << ", " <<  "      - ," << getTime() << endl;
                 
                 sell.erase(sell.begin()) ;
                 }
@@ -150,7 +150,7 @@ void processing(vector<Order_Book> &sell,
         if ((buy.empty()) || buy[0].price < price) // Sell book empty or Price is not matching
         {
             order.status = "New";
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " <<  "  - ," << getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " <<  "      - ," << getTime() << endl;
             sell.push_back(order);
             sort(sell.begin(), sell.end(), sellDescending) ;
         }
@@ -166,8 +166,8 @@ void processing(vector<Order_Book> &sell,
                     order.status = "Fill" ;
                     buy[0].status = "Fill" ;
 
-                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << buy[0].price << ", " << "  - ," <<  getFormattedTime() << endl;
-                    output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << quantity << "," << buy[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
+                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << buy[0].price << ", " << "      - ," <<  getTime() << endl;
+                    output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << quantity << "," << buy[0].price << ", " <<  "      - ," << getTime() << endl;
 
                     buy.erase(buy.begin()) ;
                     isBreak = 1 ;
@@ -181,8 +181,8 @@ void processing(vector<Order_Book> &sell,
                     buy[0].status = "Pfill" ;
                     buy[0].quantity = buy[0].quantity - quantity ;
 
-                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << order.quantity << "," << buy[0].price << ", " << "  - ," <<  getFormattedTime() << endl;
-                    output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << order.quantity << "," << buy[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
+                    output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << order.quantity << "," << buy[0].price << ", " << "      - ," <<  getTime() << endl;
+                    output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << order.quantity << "," << buy[0].price << ", " <<  "      - ," << getTime() << endl;
                     isBreak = 1 ;
                     break ;
                 }
@@ -193,8 +193,8 @@ void processing(vector<Order_Book> &sell,
                 buy[0].status = "Fill" ;
                 order.quantity = order.quantity - buy[0].quantity ;
 
-                output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << buy[0].quantity << "," << buy[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
-                output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << buy[0].quantity << "," << buy[0].price << ", " <<  "  - ," << getFormattedTime() << endl;
+                output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << buy[0].quantity << "," << buy[0].price << ", " <<  "      - ," << getTime() << endl;
+                output << "Ord" << buy[0].order_id <<","<< buy[0].client_id << "," << instrument << "," << buy[0].side << "," << buy[0].status << "," << buy[0].quantity << "," << buy[0].price << ", " <<  "      - ," << getTime() << endl;
                 
                 buy.erase(buy.begin()) ;
                 }
@@ -274,7 +274,7 @@ int main() {
             side = stoi(row[2]) ;
         }
         catch (const invalid_argument& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Side," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Side," <<getTime() << endl;
             ID++ ;
             continue ;
         }
@@ -285,7 +285,7 @@ int main() {
             }
         }
         catch (const runtime_error& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Side," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Side," <<getTime() << endl;
             ID++ ;
             continue ;
         }
@@ -294,18 +294,18 @@ int main() {
             quantity = stoi(row[3]);
         }
         catch (const invalid_argument& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Size," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Size," <<getTime() << endl;
             ID++ ;
             continue ;
         }
 
         try{
             if ((quantity % 10 != 0) || (quantity < 10) || (quantity > 1000)) {
-                throw runtime_error("Invalid 'size' valye") ;
+                throw runtime_error("Invalid 'size' value") ;
             }
         }
         catch (const runtime_error& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Size," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Size," <<getTime() << endl;
             ID++ ;
             continue ;
         }
@@ -314,7 +314,7 @@ int main() {
             price = stod(row[4]);
         }
         catch (const invalid_argument& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Price," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Price," <<getTime() << endl;
             ID++ ;
             continue ;
         }
@@ -325,7 +325,7 @@ int main() {
             }
         }
         catch (const runtime_error& e) {
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Price," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Price," <<getTime() << endl;
             ID++ ;
             continue ;
         }
@@ -335,14 +335,14 @@ int main() {
 
         if (order.client_id.empty()) {
             order.status = "Reject" ;
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Client ID," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Client ID," <<getTime() << endl;
             ID++ ;
             continue ;
         }
 
         else if (order.instru.empty() || (instrument != "Rose" && instrument != "Lavender" && instrument != "Lotus" && instrument != "Tulip" && instrument != "Orchid")){
             order.status = "Reject" ;
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Instrument," <<getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << row[2] << "," << "Reject" << "," << row[3] << "," << row[4] << ", " << "Invalid Instrument," <<getTime() << endl;
             ID++ ;
             continue ;
         }
