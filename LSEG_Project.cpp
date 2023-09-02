@@ -86,7 +86,7 @@ void processing(vector<Order_Book> &sell,
         if ((sell.empty()) || sell[0].price > price) // Sell book empty or Price is not matching
         {
             order.status = "New";
-            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " << "  - , " << getFormattedTime() << endl;
+            output << "Ord" << ID <<","<< client_id << "," << instrument << "," << side << "," << order.status << "," << quantity << "," << price << ", " << "  - ," << getFormattedTime() << endl;
             buy.push_back(order);
             sort(buy.begin(), buy.end(), buyAscending) ;
         }
