@@ -2,11 +2,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <ctime>
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include <algorithm>
 
 using namespace std;
 
@@ -35,21 +35,20 @@ public :
 string getTime()
 
 {
-    // Get the current time
+
+    //This function output the current time and data 
+    
     auto currentTime = chrono::system_clock::now();
 
-    // Convert current time to a time_t for formatting
     time_t currentTimeT = chrono::system_clock::to_time_t(currentTime);
 
-    // Format the time as "YYYY.MM.DD - HH.MM.SS.sss"
+    // Format of the time "YYYY.MM.DD - HH.MM.SS.sss"
     tm *timeInfo = localtime(&currentTimeT);
     char formattedTime[24];
     strftime(formattedTime, sizeof(formattedTime), "%Y.%m.%d - %H.%M.%S", timeInfo);
 
-    // Get milliseconds
     auto milliseconds = chrono::duration_cast<chrono::milliseconds>(currentTime.time_since_epoch()) % 1000;
 
-    // Construct the formatted time string
     stringstream ss;
     ss << formattedTime << "." << setfill('0') << setw(3) << milliseconds.count();
 
